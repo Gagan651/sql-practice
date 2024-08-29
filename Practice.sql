@@ -135,7 +135,7 @@ select sum(price) as "totalsum" from orders
 
 select customer_name,count(order_id) from 
 
-
+--Write query for atleasse one order from a customer and price is greater than 20
 select * from customers where customer_id 
 in(
 select Customer_id from orders where quantity>=1 and price>20);

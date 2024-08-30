@@ -118,6 +118,10 @@ VALUES
 
 INSERT INTO Orders (Order_ID, Customer_ID, Product_ID, Quantity, Order_Date)
 VALUES
+(4, 1, 16, 1, '2021-07-21'),
+(5, 1, 17, 2, '2021-08-21'),
+(6, 1, 12, 1, '2022-07-21'),
+(7, 1, 19, 2, '2017-07-21'),
 (1, 1, 20, 3, '2021-06-01'),
 (2, 2, 15, 1, '2021-07-22'),
 (3, 3, 7, 2, '2021-08-15');
@@ -158,3 +162,14 @@ select Customer_id from orders where quantity>=1 and price>20 )) ;
 
 SELECT * FROM CUSTOMERS WHERE CUSTOMER_ID IN (
 SELECT CUSTOMER_ID FROM ORDERS);
+
+--Can you provide the list of customer who have ordered more than 5 items
+select * from  customers where customer_id in(
+
+select customer_id from orders group by customer_id having count(customer_id)>=5
+
+);
+select * from customers where customer_id in(
+select customer_id,count(customer_id),timestampdiff(day,order_Date,Current_date)from orders group by customer_id 
+order by timestampdiff(day,order_Date,Current_date))limit 1
+

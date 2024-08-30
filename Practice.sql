@@ -170,6 +170,53 @@ select customer_id from orders group by customer_id having count(customer_id)>=5
 
 );
 select * from customers where customer_id in(
-select customer_id,count(customer_id),timestampdiff(day,order_Date,Current_date)from orders group by customer_id 
-order by timestampdiff(day,order_Date,Current_date))limit 1
+select customer_id from orders order by timestampdiff(day,order_Date,Current_date))limit 1
+
+--What is the average price of all orders made?
+
+select avg(price) from orders ;
+
+--Can you provide the details of customers who have never placed an order?
+ 
+ select * from customers where customer_id not in(
+ select customer_id from orders);
+ 
+ select * from customers;
+select * from orders;
+ 
+ -- What are all the orders that are priced above the average order price?
+ 
+ select order_id from orders where price >
+ (
+ select avg(price) from orders
+ );
+ 
+ --Who are the customers that have ordered a specific item?
+
+ --What is the total amount spent by each customer?
+ 
+select sum(price),customer_id from orders group by customer_id or
+select sum(o.price),o.customer_id,c.customer_name from orders o join customers c on o.customer_id=c.customer_id group by customer_id
+
+--Which customer has the highest total order price?
+select customer_id,sum(price) from orders group by customer_id order by sum(price) desc limit 1;
+or
+select o.customer_id,c.customer_name,sum(o.price) from orders o join customers c on o.customer_id=c.customer_id 
+group by customer_id order by sum(price) desc limit 1;
+
+--How many customers have made more than three orders?
+
+select * from customers where customer_id in(
+select customer_id from orders group by customer_id having count(customer_id)>=3)
+
+
+Can you find customers who have ordered products with a price less than a certain amount?
+
+select * from customers where customer_id in(
+select customer_id from orders where price<30);
+
+
+
+
+
 

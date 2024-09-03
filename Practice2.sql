@@ -26,5 +26,16 @@ insert into employee values (4,'jeevita','7892994148',7000,4);
 insert into employee values (5,'amol','7892994240',8000,1);
 insert into employee values (6,'ashok','7892954248',10000,3);
 insert into employee values (7,'ranjita','7891994248',11000,1);
-
+insert into employee values (8,'manu','7891994242',11000,1);
+insert into employee values (89,'basva','7891994241',10000,2);
 select * from employee
+
+
+select name,(salary*0.1)+salary from employee where salary>5000;
+
+update employee set salary=(salary*0.1)+salary where salary<5000;
+
+select * from employee where salary in(
+select max(salary) from employee where salary not in(
+
+select max(salary) from employee));

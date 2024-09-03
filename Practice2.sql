@@ -35,7 +35,24 @@ select name,(salary*0.1)+salary from employee where salary>5000;
 
 update employee set salary=(salary*0.1)+salary where salary<5000;
 
+--write query to fetch  2 nd highest
 select * from employee where salary in(
 select max(salary) from employee where salary not in(
 
 select max(salary) from employee));
+
+
+select  distinct top 1 salary from employee order by salary 
+
+select * from employee 
+
+--write query to fetch  1 and 2 and 3 highest salary
+SELECT top 1 salary
+ from
+(select DIstinct top 3  salary  from employee order by salary desc) as result
+order by salary);
+
+--write query to fetch  1 and 2 and 3 minimum salary
+select top 1 salary from(
+select DIstinct top 2 salary  from employee order by salary) as res
+order by salary desc);

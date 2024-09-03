@@ -21,7 +21,7 @@ insert into department values(2,'payrol');
 insert into department values(3,'hr');
 insert into department values(4,'admin');
 
-insert into employee values (1,'arun','7892994248',1000,3,'2024-08-29 12:00:00 ');
+insert into employee values (1,'arun','7892994248',1000,3);
 insert into employee values (2,'john','7892994243',2000,2);
 insert into employee values (3,'charles','7892994548',4000,1);
 insert into employee values (4,'jeevita','7892994148',7000,4);
@@ -221,14 +221,18 @@ select customer_id from orders where price<30);
 
 select * from customers where customer_id in(
 select customer_id from orders
---write a quwry
+--write a query to extract the customer name who has minimumu salary
 select min(o.price),c.customer_name
 from customers c join orders o on c.customer_id=o.customer_id group by c.customer_name order by min(o.price) limit 1
-
-
-
+or
 select* from customers where customer_id in(
 select customer_id from orders where price in(
 select min(price) from orders))
+
+select distinct top 3  order_id   from orders
+SELECT TOP 3 customer_name FROM Customers;
+
+
+select name, timestampdiff(year,dob,sysdate()) as year from employee 
 
 

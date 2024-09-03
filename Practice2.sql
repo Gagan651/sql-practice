@@ -56,3 +56,17 @@ order by salary);
 select top 1 salary from(
 select DIstinct top 2 salary  from employee order by salary) as res
 order by salary desc);
+
+alter table employee add DOB datetime;
+
+update employee set DOB='2024-08-29 12:00:00 ' where id=1;
+update employee set DOB='1995-08-21 11:00:00 ' where id=2;
+update employee set DOB='1993-07-12 08:10:00 ' where id=3;
+update employee set DOB='1991-01-11 09:15:10 ' where id=4;
+update employee set DOB='2023-08-29 2:00:00 ' where id=5;
+update employee set DOB='1992-08-29 1:25:00 ' where id=6;
+update employee set DOB='2024-08-28 02:00:00 ' where id=7;
+update employee set DOB='2024-06-21 12:00:00 ' where id=8;
+update employee set DOB='2024-05-20 12:00:00 ' where id=89;
+
+select CURRENT_TIMESTAMP(

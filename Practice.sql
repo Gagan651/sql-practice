@@ -12,7 +12,7 @@ create table department(
 DID int primary key,
 Dept_name varchar(30)
 );
-
+Server=localhost;Database=master;Trusted_Connection=True;
 drop table employee;
 drop table department;
 
@@ -131,6 +131,10 @@ ADD COLUMN Price FLOAT;
 UPDATE Orders SET Price = 19.99 WHERE Order_ID = 1;
 UPDATE Orders SET Price = 29.99 WHERE Order_ID = 2;
 UPDATE Orders SET Price = 39.99 WHERE Order_ID = 3;
+UPDATE Orders SET Price = 49.99 WHERE Order_ID = 4;
+UPDATE Orders SET Price = 59.99 WHERE Order_ID = 5;
+UPDATE Orders SET Price = 39.99 WHERE Order_ID = 6;
+UPDATE Orders SET Price = 29.99 WHERE Order_ID = 7;
 
 select * from customers;
 select * from orders;
@@ -169,22 +173,22 @@ select * from  customers where customer_id in(
 select customer_id from orders group by customer_id having count(customer_id)>=5
 
 );
+--write query to 
 select * from customers where customer_id in(
 select customer_id from orders order by timestampdiff(day,order_Date,Current_date))limit 1
 
---What is the average price of all orders made?
+--what is the average price of all the order made
+select avg(price) from orders;
 
-select avg(price) from orders ;
+
 
 --Can you provide the details of customers who have never placed an order?
- 
- select * from customers where customer_id not in(
- select customer_id from orders);
- 
- select * from customers;
-select * from orders;
- 
- -- What are all the orders that are priced above the average order price?
+
+select * from customers where customer_id not in(
+select customer_id from orders)
+
+
+-- What are all the orders that are priced above the average order price?
  
  select order_id from orders where price >
  (
@@ -207,16 +211,24 @@ group by customer_id order by sum(price) desc limit 1;
 --How many customers have made more than three orders?
 
 select * from customers where customer_id in(
-select customer_id from orders group by customer_id having count(customer_id)>=3)
+select customer_id,count(customer_id) from orders group by customer_id having count(customer_id)>=3)
 
 
-Can you find customers who have ordered products with a price less than a certain amount?
+-- Can you find customers who have ordered products with a price less than a certain amount?
 
 select * from customers where customer_id in(
 select customer_id from orders where price<30);
 
+select * from customers where customer_id in(
+select customer_id from orders
+--write a quwry
+select min(o.price),c.customer_name
+from customers c join orders o on c.customer_id=o.customer_id group by c.customer_name order by min(o.price) limit 1
 
 
 
+select* from customers where customer_id in(
+select customer_id from orders where price in(
+select min(price) from orders))
 
 

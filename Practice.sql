@@ -234,5 +234,233 @@ SELECT TOP 3 customer_name FROM Customers;
 
 
 select name, timestampdiff(year,dob,sysdate()) as year from employee 
+select* from customers where customer_id in(
+select customer_id from orders where price>20  group by customer_id having count(customer_id)>1)
+
+select * from orders
+
+
+
+
+create database project;
+use project;
+
+CREATE TABLE Employee (
+    emp_id VARCHAR(255) NOT NULL,
+    emp_name VARCHAR(255) NOT NULL,
+    salary INT NOT NULL,
+    dept_id CHAR(5) NOT NULL,
+    manager_id VARCHAR(255),
+    PRIMARY KEY (emp_id)
+);
+
+CREATE TABLE Department (
+    dept_id VARCHAR(255) NOT NULL,
+    dept_name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (dept_id)
+    
+);
+
+CREATE TABLE Manager (
+    manager_id VARCHAR(255) NOT NULL,
+    manager_name VARCHAR(255) NOT NULL,
+    dept_id VARCHAR(255) NOT NULL,
+    PRIMARY KEY (manager_id),
+    FOREIGN KEY (dept_id) REFERENCES Department(dept_id)
+);
+
+CREATE TABLE Projects (
+    project_id VARCHAR(255) NOT NULL,
+    project_name VARCHAR(255) NOT NULL,
+    team_member_id VARCHAR(255) NOT NULL);
+
+
+
+INSERT INTO Employee (emp_id, emp_name, salary, dept_id, manager_id) 
+VALUES('E1', 'NAVEEN', 15000, 'D1', 'M1'),
+ ('E2', 'Manoj', 15000, 'D1', 'M1'),
+ ('E3', 'James', 55000, 'D2', 'M2'),
+ ('E4', 'Michel', 25000, 'D2', 'M2'),
+ ('E5', 'Ali', 20000, 'D10', 'M3'),
+ ('E6', 'Robin', 35000, 'D10', 'M3');
+
+
+INSERT INTO Department (dept_id, dept_name)
+VALUES 
+('D12', 'Admin'),
+('D1', 'IT'),
+('D2', 'HR'),
+('D3', 'Finance'),
+('D4', 'Admin');
+
+
+INSERT INTO Manager (manager_id, manager_name, dept_id)
+VALUES 
+('M1', 'Prem', 'D3'),
+('M2', 'Shripadh', 'D4'),
+('M3', 'Nick', 'D1'),
+('M4', 'Cory', 'D1');
+
+INSERT INTO Projects (project_id, project_name, team_member_id)
+VALUES 
+('P1', 'DataMigration', 'E1'),
+('P1', 'DataMigration', 'E2'),
+('P1', 'DataMigration', 'M3'),
+('P2', 'ETL Tool', 'E1'),
+('P3', 'ETL Tool', 'M4');
+
+
+
+
+1. Fetch the empname and department name they belongs to 
+
+select e.* from employee as e 
+inner join department as d
+on e.dept_id=d.dept_id
+
+--2. Fetch All the employee name and their name they belongs to
+select e.* from employee as e 
+left join department as d
+on e.dept_id=d.dept_id
+
+select * from department as d
+right join employee as e
+on d.dept_id=e.dept_id
+
+
+-- Write a SQL query to fetch the names of employees who work under the same manager and the manager's name.
+
+select * from employee e 
+join manager m  on e.manager_id=m.manager_id
+
+
+-- Write a SQL query to join the Employee and Department tables and fetch the employee's name and their respective department names.
+
+
+select * from employee e join department d on e.dept_id=d.dept_id
+
+--Write a SQL query to retrieve all managers and the number of employees they manage.
+
+select count(e.emp_id),m.manager_name from employee e 
+join manager m on e.manager_id=m.manager_id group by m.manager_name
+
+--Write a SQL query that displays a list of employees who are not managers.
+
+select * from manager where manager_id not in(
+select m.manager_id from manager m  
+join employee e on m.manager_id=e.manager_id )
+
+
+
+-- Write a SQL query to fetch the details of the projects and the respective details of the team members involved in those projects.
+
+(select * from projects p 
+join employee e on  p.team_member_id=e.emp_id)
+
+
+--Write a SQL query to fetch all information about employees, their departments, their managers, and the projects they are involved in.
+
+select * from employee e
+join department d on e.dept_id=d.dept_id
+join projects p on e.emp_id=p.team_member_id
+
+
+-- Write a SQL query to get the employee name, 
+--their manager name,
+-- and department name where the department ID is the same in the Department and Manager table.
+
+Select * from manager
+
+select e.emp_name,m.manager_name,d.dept_name
+from Employee e
+join manager m on e.manager_id=m.manager_id
+join department d on d.dept_id=m.dept_id
+
+--Write a SQL query to fetch all managers who are also employees and the projects handled by their team.
+
+
+select  m.manager_name,p.project_name from manager m 
+join employee e on m.manager_id=e.manager_id
+join projects p on p.team_member_id=e.emp_id
+
+--Write a SQL query to get the names of all employees who are not involved in any project.
+
+select * from employee where emp_id not in(
+select team_member_id from projects p join employee e on p.team_member_id=e.emp_id)
+
+-- Write a SQL query to fetch all departments which don't have any employees.
+
+select * from department where dept_id not in(
+select distinct e.dept_id from employee e join department d on e.dept_id=d.dept_id)
+
+
+
+--Write a SQL query to fetch the managers name along with the count of the number of employees and the number of projects handled by his/her team.
+
+select manager_name,count(emp_id),count(project_id) 
+from manager m join employee e on m.manager_id=e.manager_id
+join projects p on p.team_member_id=e.emp_id
+group by manager_name
+
+select * from manager;
+select * from employee;
+select * from department;
+
+select * from projects;
+
+--Write a SQL query to fetch the names of all departments along with the less paid employees name in each department.
+
+select d.dept_name,e.emp_name,min(e.salary) from department d join employee e on d.dept_id=e.dept_id group by d.dept_name,e.emp_name having min(e.salary)<16000;
+
+--Write a SQL query to fetch project-wise count of employees.
+
+select project_name,count(team_member_id) from projects p join employee e on p.team_member_id=e.emp_id group by project_name
+
+--Write a SQL query to fetch the list of employees who are managed by the manager who manages the most number of employees.
+
+
+select e.emp_name from employee e where e.manager_id=
+(select m.manager_id from manager m join employee e1 on 
+m.manager_id=e1.manager_id group by m.manager_id
+order by  count(e1.emp_id) desc limit 1);
+
+#Write a SQL query to fetch department-wise count of projects.
+SELECT d.dept_name,count(p.project_id)
+from department d
+join employee e 
+on d.dept_id=e.dept_id
+join projects p
+on p.team_member_id= e.emp_Id
+group by d.dept_name
+select * from projects;
+
+
+select distinct dept_id from employee
+union 
+select distinct dept_id from department
+
+#List all departments along with the number of employees in each.
+
+select dept_name,count(emp_id) from department d join employee e on d.dept_id=e.dept_id group by dept_name
+
+--Get the total number of projects each employee is working on.
+
+select e.emp_name,count(p.project_id)
+from employee e join projects p on e.emp_id=p.team_member_id group by e.emp_name
+
+#Find the department name and the highest salary in each department.
+
+select e.dept_id,d.dept_name ,max(salary) from department d join employee e on d.dept_id=e.dept_id group by dept_id
+
+--Find all projects that involve team members from multiple departments.
+
+select p.*,d.dept_name from projects p join employee e on p.team_member_id=e.emp_id
+join department d on d.dept_id=e.dept_id
+
+--Retrieve employees who work under the same manager and belong to the same department.
+
+select emp_name,e.manager_id,d.dept_id from employee e join manager m on e.manager_id=m.manager_id
+join department d on d.dept_id=e.dept_id
+
 
 

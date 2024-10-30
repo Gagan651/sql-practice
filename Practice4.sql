@@ -1,3 +1,5 @@
+create database book;
+
 CREATE TABLE Books (
     book_id INT PRIMARY KEY,
     title VARCHAR(150),
@@ -116,11 +118,7 @@ select max(price) from books);
 
 select count(book_id),genre_id from books group by genre_id;
 
-select * from Books;
-select * from Authors ;
-select * from Genres;
-select * from  Members;
-select * from Borrowed_Books;
+
 #Retrieve the top 5 most expensive books.
 
 select * from books order by price desc limit 5;
@@ -144,4 +142,66 @@ with cte as
 
 select m.first_name,m.last_name,b.title from members m join cte c on m.member_id=c.member_id
 join books b on b.book_id=c.book_id;
+
+
+
+
+#Write a query to find books that are more expensive than the average price.
+
+select * from books where price>
+(select avg(price) from books)
+
+
+
+#How would you find all books that have not been borrowed?
+select * from books where book_id not in(
+select book_id from Borrowed_Books)
+
+#Retrieve the titles of books written by the author who has the most published books.
+with cte as 
+(select count(author_id),author_id from books group by author_id order by count(author_id) desc limit 1)
+select title from books b join cte c on b.author_id=c.author_id;
+
+
+
+
+#How can you retrieve the most borrowed book from the library?
+
+with cte as
+(select count(book_id),book_id from Borrowed_Books group by book_id order by count(book_id) desc limit 1)
+
+select * from books natural join cte or
+select * from books b join cte c on b.book_id=c.book_id
+
+
+#Write a query to find all books published in the last 5 years.
+select * from books where published_year >
+(select year(date_add(curdate(),interval -5 year)));
+
+
+
+#Retrieve books and their borrowing history, including member names and borrow dates.
+select b.title,l.*,m.first_name from  books b join Borrowed_Books l on b.book_id=l.book_id
+join Members m on m.member_id=l.member_id
+
+
+select * from Books;
+select * from Authors ;
+select * from Genres;
+select * from  Members;
+select * from Borrowed_Books;
+#Write a query to find books that have been borrowed and books that have never been borrowed.
+
+
+select * ,'barrowed' as status from books  where book_id  in
+(select book_id from Borrowed_Books )
+union all
+select *,"not barrowed" as status from books  where book_id not in
+(select book_id from Borrowed_Books )
+
+
+
+How would you retrieve a list of unique genres in the database?
+Find books that belong to multiple genres (assuming a many-to-many relationship).
+
 

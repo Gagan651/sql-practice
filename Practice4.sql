@@ -185,11 +185,7 @@ select b.title,l.*,m.first_name from  books b join Borrowed_Books l on b.book_id
 join Members m on m.member_id=l.member_id
 
 
-select * from Books;
-select * from Authors ;
-select * from Genres;
-select * from  Members;
-select * from Borrowed_Books;
+
 #Write a query to find books that have been borrowed and books that have never been borrowed.
 
 
@@ -199,9 +195,14 @@ union all
 select *,"not barrowed" as status from books  where book_id not in
 (select book_id from Borrowed_Books )
 
+select * from Books;
+select * from Authors ;
+select * from Genres;
+select * from  Members;
+select * from Borrowed_Books;
 
 
-How would you retrieve a list of unique genres in the database?
-Find books that belong to multiple genres (assuming a many-to-many relationship).
+
+
 
 
